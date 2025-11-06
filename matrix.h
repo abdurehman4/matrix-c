@@ -12,5 +12,6 @@ typedef struct Matrix matrix_t;
 void createMatrix(matrix_t *matrix);
 int getMatrix(matrix_t *matrix);
 void pMatrix(matrix_t *matrix);
+void freeMatrix(matrix_t *matrix);
 
 #endif // !MATRIX_H

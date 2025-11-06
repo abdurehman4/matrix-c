@@ -5,12 +5,14 @@
 void createMatrix(matrix_t *matrix);
 int getMatrix(matrix_t *matrix);
 void pMatrix(matrix_t *matrix);
+void freeMatrix(matrix_t *matrix);
 
 int main() {
   matrix_t twoBytwo;
   createMatrix(&twoBytwo);
   getMatrix(&twoBytwo);
   pMatrix(&twoBytwo);
+  freeMatrix(&twoBytwo);
   return 0;
 }
 
@@ -57,4 +59,11 @@ void pMatrix(matrix_t *matrix) {
     }
     puts("");
   }
+}
+
+void freeMatrix(matrix_t *matrix) {
+  for (int i = 0; i < matrix->n; i++) {
+    free(matrix->rows[i]);
+  }
+  free(matrix->rows);
 }
