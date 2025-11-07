@@ -7,6 +7,7 @@ int getMatrix(matrix_t *matrix);
 void pMatrix(matrix_t *matrix);
 void freeMatrix(matrix_t *matrix);
 int addMatrices(matrix_t A, matrix_t B, matrix_t *C);
+int multiplyMatrices(matrix_t A, matrix_t B, matrix_t *C);
 
 int main() {
   matrix_t A;
@@ -23,7 +24,8 @@ int main() {
     puts("4] Print Matrix B");
     puts("5] Print Resultant Matrix");
     puts("6] Add Matrices.");
-    puts("7] Exit");
+    puts("7] Multiply A & B");
+    puts("8] Exit");
     printf("-> ");
     scanf("%d", &option);
     printf("Your option is : %d\n", option);
@@ -48,6 +50,9 @@ int main() {
       addMatrices(A, B, &C);
       break;
     case 7:
+      multiplyMatrices(A, B, &C);
+      break;
+    case 8:
       freeMatrix(&A);
       freeMatrix(&B);
       return 0;
@@ -124,6 +129,8 @@ int addMatrices(matrix_t A, matrix_t B, matrix_t *C) {
   if (A.m == B.m && A.n == B.n) {
     C->n = A.n;
     C->m = A.m;
+    if (C->rows != NULL)
+      freeMatrix(C);
 
     C->rows = (int **)malloc(sizeof(int *) * C->n);
     if (C->rows == NULL) {
@@ -141,7 +148,45 @@ int addMatrices(matrix_t A, matrix_t B, matrix_t *C) {
       }
     }
   } else {
+    puts("--------------------------");
     puts("Addition is not possible!!");
+    puts("--------------------------");
+    return -1;
+  }
+  return 0;
+}
+
+int multiplyMatrices(matrix_t A, matrix_t B, matrix_t *C) {
+  if (A.m == B.n && A.n != 0 && A.m != 0 && B.n != 0 && B.m != 0) {
+    C->n = A.n;
+    C->m = B.m;
+    if (C->rows != NULL)
+      freeMatrix(C);
+    C->rows = (int **)malloc(sizeof(int *) * C->n);
+    if (C->rows == NULL) {
+      perror("Error Allocating the array of rows.");
+      return -1;
+    } else {
+      for (int i = 0; i < C->n; i++) {
+        C->rows[i] = (int *)malloc(sizeof(int) * C->m);
+        if (C->rows[i] == NULL) {
+          perror("Error Allocating the row");
+          return -1;
+        } else {
+          for (int j = 0; j < C->m; j++) {
+            int val = 0;
+            for (int n = 0; n < A.m; n++) {
+              val += A.rows[i][n] * B.rows[n][j];
+            }
+            C->rows[i][j] = val;
+          }
+        }
+      }
+    }
+  } else {
+    puts("--------------------------------");
+    puts("Multiplication is not possible!!");
+    puts("--------------------------------");
     return -1;
   }
   return 0;
